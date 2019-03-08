@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    ​
+    <springProperty scope="context" name="service" source="spring.application.name"/>
+    <springProperty scope="context" name="env" source="spring.profiles"/>
+
+    <!-- 定义日志输出格式 -->
+    <property name="logPattern"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS,GMT+8} | %level | %thread | %logger | %line | %msg%n"/>
+
+    <!-- 定义日志编码-->
+    <property name="logEncoding" value="UTF-8"/>
+
+
+    <!--定义日志文件路径 start-->
+    <property name="debugPath" value="${LOG_PATH}/debug"/>​
+    <property name="infoPath" value="${LOG_PATH}/info"/>​
+    <property name="warnPath" value="${LOG_PATH}/warn"/>​
+    <property name="errorPath" value="${LOG_PATH}/error"/>​
+    <!--定义日志文件路径 end-->
+
+    <!--控制台日志输出-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${logPattern}</pattern>
+            <charset>${logEncoding}</charset>
+        </encoder>
+    </appender>
+
+    <!--定义appender start-->
+    <appender name="debugAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${debugPath}/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${debugPath}/%d{yyyy-MM-dd,GMT+8}/debug.%d{yyyy-MM-dd_HH,GMT+8}.%i.log</fileNamePattern>
+            <maxHistory>360</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+            <charset>${logEncoding}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>debug</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="infoAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${infoPath}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${infoPath}/%d{yyyy-MM-dd,GMT+8}/info.%d{yyyy-MM-dd_HH,GMT+8}.%i.log</fileNamePattern>
+            <maxHistory>360</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+            <charset>${logEncoding}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="warnAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${warnPath}/warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${warnPath}/%d{yyyy-MM,GMT+8}/warn.%d{yyyy-MM-dd,GMT+8}.%i.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+            <charset>${logEncoding}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>warn</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="errorAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${errorPath}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${errorPath}/%d{yyyy-MM}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+            <charset>${logEncoding}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <!--定义appender end-->
+
+
+    <!--开发环境-->
+    <springProfile name="dev">
+        <logger name="com.fsindustry.debussy" level="debug" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <logger name="org.springframework" level="info" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <logger name="org.hibernate" level="error" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <!--根日志-->
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </root>
+    </springProfile>
+
+    <!--测试环境-->
+    <springProfile name="test">
+        <logger name="com.fsindustry.debussy" level="debug" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <logger name="org.springframework" level="info" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <logger name="org.hibernate" level="error" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <!--根日志-->
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </root>
+    </springProfile>
+
+    <!--生产环境-->
+    <springProfile name="prod">
+        <logger name="com.fsindustry.debussy" level="debug" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <logger name="org.springframework" level="info" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <logger name="org.hibernate" level="error" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </logger>
+        <!--根日志-->
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="debugAppender"/>
+            <appender-ref ref="infoAppender"/>
+            <appender-ref ref="warnAppender"/>
+            <appender-ref ref="errorAppender"/>
+        </root>
+    </springProfile>
+</configuration>

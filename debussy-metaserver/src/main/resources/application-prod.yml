@@ -1,0 +1,44 @@
+##################################################
+# 服务器基本属性配置
+##################################################
+# 启用调试模式，将输出更多日志
+debug: false
+server:
+  port: 8080
+spring:
+  application:
+    name: debussy-metaserver
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: ${STATIC_LOCATIONS}
+  # 配置http编码
+  http:
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
+  # 配置jackson相关
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  ###########################################
+  # 数据源配置
+  ###########################################
+  # 配置数据源
+  datasource:
+    # mysql
+    url: jdbc:mysql://127.0.0.1:8306/debussy?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+    username: debussy
+    password: debussy@123
+    platform: mysql
+    driver-class-name: com.mysql.jdbc.Driver
+
+###########################################
+# 日志相关配置
+###########################################
+logging:
+  config: classpath:logback-spring.xml
+  path: ./logs

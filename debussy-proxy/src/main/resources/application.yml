@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: debussy-proxy
+  profiles:
+    active: dev

@@ -1,0 +1,66 @@
+##################################################
+# 服务器基本属性配置
+##################################################
+# 启用调试模式，将输出更多日志
+debug: true
+server:
+  port: 8090
+spring:
+  application:
+    name: debussy-proxy
+  mvc:
+    static-path-pattern: /**
+  # 配置http编码
+  http:
+    encoding:
+      enabled: true
+      charset: UTF-8
+      force: true
+  # 配置jackson相关
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  ###########################################
+  # 数据源配置
+  ###########################################
+  # 配置h2内存数据库
+  h2:
+    console:
+      settings:
+        web-allow-others: true
+      enabled: true
+      path: /h2-console
+  # 配置数据源
+  datasource:
+    # h2 内存数据库
+    url: jdbc:h2:mem:debussy
+    username: debussy
+    password: debussy@123
+    platform: h2
+    schema:
+    - classpath:h2/schema/00_drop_table.sql
+    - classpath:h2/schema/01_create_table.sql
+    #data: classpath:h2/data/*.sql
+  ###########################################
+  # devtools配置
+  ###########################################
+  devtools:
+    livereload:
+      port: 38090
+
+###########################################
+# 日志相关配置
+###########################################
+logging:
+  config: classpath:logback-spring.xml
+  path: ./logs
+
+###########################################
+# eureka server配置
+###########################################
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8080/eureka/
